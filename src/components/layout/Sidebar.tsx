@@ -1,0 +1,96 @@
+
+import React from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Search, Home } from "lucide-react";
+
+type SidebarProps = {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  searchHistory: SearchHistoryItem[];
+  onHistoryItemClick: (query: string) => void;
+};
+
+export type SearchHistoryItem = {
+  id: string;
+  query: string;
+  timestamp: Date;
+};
+
+const Sidebar: React.FC<SidebarProps> = ({
+  isOpen,
+  setIsOpen,
+  searchHistory,
+  onHistoryItemClick,
+}) => {
+  const isMobile = useIsMobile();
+  
+  return (
+    <>
+      {isOpen && isMobile && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-border transition-transform duration-300 transform",
+          isOpen ? "translate-x-0" : "-translate-x-full",
+          "md:translate-x-0 md:relative md:z-0"
+        )}
+      >
+        <div className="flex flex-col h-full p-4">
+          <div className="flex items-center space-x-2 mb-6">
+            <Home className="h-6 w-6 text-perplexity-600" />
+            <h1 className="text-lg font-semibold">Curious</h1>
+          </div>
+          
+          <Button
+            variant="outline"
+            className="w-full mb-4 justify-start"
+            onClick={() => window.location.reload()}
+          >
+            <Search className="mr-2 h-4 w-4" />
+            New Search
+          </Button>
+          
+          <div className="text-sm font-medium text-muted-foreground mb-2">
+            Search History
+          </div>
+          
+          <ScrollArea className="flex-1 -mr-4 pr-4">
+            {searchHistory.length === 0 ? (
+              <div className="text-sm text-muted-foreground p-2">
+                No search history yet
+              </div>
+            ) : (
+              <div className="space-y-1">
+                {searchHistory.map((item) => (
+                  <Button
+                    key={item.id}
+                    variant="ghost"
+                    className="w-full justify-start text-left truncate h-auto py-2"
+                    onClick={() => onHistoryItemClick(item.query)}
+                  >
+                    <span className="truncate">{item.query}</span>
+                  </Button>
+                ))}
+              </div>
+            )}
+          </ScrollArea>
+          
+          <div className="pt-4 border-t mt-4">
+            <div className="text-xs text-muted-foreground">
+              Curious Search Buddy © {new Date().getFullYear()}
+            </div>
+          </div>
+        </div>
+      </aside>
+    </>
+  );
+};
+
+export default Sidebar;
