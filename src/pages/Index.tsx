@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
@@ -157,7 +158,7 @@ const Index = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#1A1F2C] text-white">
+    <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
       <Sidebar
         isOpen={sidebarOpen}
@@ -171,16 +172,30 @@ const Index = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="sticky top-0 z-10 w-full bg-[#1A1F2C] p-4">
+        <header className="sticky top-0 z-10 w-full bg-background border-b p-4">
           <div className="container mx-auto flex items-center justify-between">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="md:hidden text-white hover:bg-white/10"
+              className="md:hidden"
             >
               <Menu className="h-5 w-5" />
             </Button>
+            
+            <div className="flex-1 flex justify-center">
+              {searchResult ? (
+                <SearchBar 
+                  onSearch={handleSearch} 
+                  isSearching={isSearching} 
+                  defaultQuery={currentQuery}
+                />
+              ) : (
+                <div className="text-xl font-semibold text-perplexity-600">
+                  Curious Search Buddy
+                </div>
+              )}
+            </div>
             
             <div className="w-10"> {/* Empty div for alignment */}
             </div>
@@ -188,12 +203,15 @@ const Index = () => {
         </header>
         
         {/* Main Content */}
-        <main className="flex-1 container mx-auto p-4 md:p-8 flex flex-col items-center justify-center">
+        <main className="flex-1 container mx-auto p-4 md:p-8">
           {!searchResult ? (
-            <div className="flex flex-col items-center justify-center min-h-[70vh] max-w-2xl w-full">
-              <h1 className="text-5xl font-bold text-center mb-16">
-                perplexity
+            <div className="flex flex-col items-center justify-center min-h-[70vh]">
+              <h1 className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-perplexity-500 to-perplexity-700 bg-clip-text text-transparent">
+                Curious Search Buddy
               </h1>
+              <p className="text-lg text-center text-muted-foreground max-w-md mb-8">
+                Your AI-powered search companion. Ask anything and get comprehensive answers with sources.
+              </p>
               
               {showVoiceInput ? (
                 <VoiceSearchInput onTranscription={handleVoiceTranscription} />
@@ -204,60 +222,93 @@ const Index = () => {
                   <SearchBar 
                     onSearch={handleSearch} 
                     isSearching={isSearching}
-                    onToggleVoiceInput={toggleVoiceInput}
-                    onToggleFileUpload={toggleFileUpload}
                   />
                   
-                  <div className="mt-4 flex justify-center items-center gap-2">
+                  <div className="flex justify-center mt-2 space-x-2">
                     <Button 
                       variant="outline" 
-                      size="sm"
-                      className="border border-white/20 bg-transparent text-white hover:bg-white/10"
+                      size="sm" 
+                      onClick={toggleVoiceInput}
                     >
-                      Search
+                      Voice Search
                     </Button>
                     <Button 
                       variant="outline" 
                       size="sm"
-                      className="border border-white/20 bg-transparent text-white hover:bg-white/10"
+                      onClick={toggleFileUpload}
                     >
-                      Research
+                      Upload File
                     </Button>
                   </div>
                 </div>
               )}
-            </div>
-          ) : (
-            <div className="max-w-3xl mx-auto w-full">
-              <div className="mb-8">
-                <SearchBar 
-                  onSearch={handleSearch} 
-                  isSearching={isSearching} 
-                  defaultQuery={currentQuery}
-                  onToggleVoiceInput={toggleVoiceInput}
-                  onToggleFileUpload={toggleFileUpload}
-                />
-              </div>
               
-              <div className="mb-4 flex justify-center">
+              <div className="mt-6">
                 <SearchTypeToggle 
                   activeType={searchType} 
                   onChange={handleSearchTypeChange} 
                 />
               </div>
               
+              <SearchModelSelector
+                selectedModel={searchModel}
+                selectedDomain={searchDomain}
+                onModelChange={handleSearchModelChange}
+                onDomainChange={handleSearchDomainChange}
+              />
+              
+              <div className="mt-8 flex flex-wrap justify-center gap-2">
+                <Button 
+                  variant="outline"
+                  onClick={() => handleSearch("What is Perplexity AI")}
+                  className="m-1"
+                >
+                  What is Perplexity AI
+                </Button>
+                <Button 
+                  variant="outline"
+                  onClick={() => handleSearch("How to learn programming")}
+                  className="m-1"
+                >
+                  How to learn programming
+                </Button>
+                <Button 
+                  variant="outline"
+                  onClick={() => handleSearch("What is React")}
+                  className="m-1"
+                >
+                  What is React
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="max-w-3xl mx-auto">
+              <div className="mb-4">
+                <SearchTypeToggle 
+                  activeType={searchType} 
+                  onChange={handleSearchTypeChange} 
+                />
+              </div>
+              
+              <SearchModelSelector
+                selectedModel={searchModel}
+                selectedDomain={searchDomain}
+                onModelChange={handleSearchModelChange}
+                onDomainChange={handleSearchDomainChange}
+              />
+              
               {/* Loading state or results */}
               {isSearching ? (
-                <div className="animate-pulse space-y-4 bg-white/5 rounded-lg p-6">
-                  <div className="h-8 bg-white/10 rounded w-3/4"></div>
+                <div className="animate-pulse space-y-4">
+                  <div className="h-8 bg-gray-200 rounded w-3/4"></div>
                   <div className="space-y-2">
-                    <div className="h-4 bg-white/10 rounded"></div>
-                    <div className="h-4 bg-white/10 rounded"></div>
-                    <div className="h-4 bg-white/10 rounded w-5/6"></div>
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded w-5/6"></div>
                   </div>
                   <div className="space-y-2">
-                    <div className="h-4 bg-white/10 rounded"></div>
-                    <div className="h-4 bg-white/10 rounded w-4/6"></div>
+                    <div className="h-4 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded w-4/6"></div>
                   </div>
                 </div>
               ) : (
@@ -268,19 +319,6 @@ const Index = () => {
             </div>
           )}
         </main>
-        
-        {/* Footer */}
-        {!searchResult && (
-          <footer className="p-4 text-xs text-center text-gray-400 border-t border-white/10 mt-auto">
-            <div className="flex justify-center space-x-4">
-              <span>Pro</span>
-              <span>Enterprise</span>
-              <span>API</span>
-              <span>Blog</span>
-              <span>Careers</span>
-            </div>
-          </footer>
-        )}
       </div>
     </div>
   );

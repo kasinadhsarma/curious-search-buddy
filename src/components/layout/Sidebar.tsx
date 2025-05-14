@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Home, Library, Search, Globe, User, Plus, Settings, Download } from "lucide-react";
+import { Search, Home, Trash2, User, Settings, FileUp, Mic, Laptop } from "lucide-react";
 import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
@@ -54,112 +54,122 @@ const Sidebar: React.FC<SidebarProps> = ({
       )}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-56 bg-[#1A1F2C] transition-transform duration-300 transform",
+          "fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-border transition-transform duration-300 transform",
           isOpen ? "translate-x-0" : "-translate-x-full",
           "md:translate-x-0 md:relative md:z-0"
         )}
       >
-        <div className="flex flex-col h-full">
-          {/* Logo Area */}
-          <div className="p-4 flex justify-center items-center">
-            <div className="text-white font-bold text-2xl">perplexity</div>
+        <div className="flex flex-col h-full p-4">
+          {/* User Profile Section */}
+          <div className="flex items-center space-x-2 mb-6 p-2 rounded-lg hover:bg-muted cursor-pointer" onClick={() => setShowUserMenu(!showUserMenu)}>
+            <Avatar className="h-10 w-10">
+              <AvatarImage src="" alt="User" />
+              <AvatarFallback>U</AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <div className="text-sm font-medium">Guest User</div>
+              <div className="text-xs text-muted-foreground">Basic Plan</div>
+            </div>
           </div>
           
-          {/* Navigation */}
-          <nav className="flex-1">
-            <ul className="space-y-1 px-2">
-              <li>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-white hover:bg-white/10"
-                >
-                  <Home className="mr-2 h-5 w-5" />
-                  <span>Home</span>
-                </Button>
-              </li>
-              <li>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-white hover:bg-white/10"
-                >
-                  <Library className="mr-2 h-5 w-5" />
-                  <span>Library</span>
-                </Button>
-              </li>
-              <li>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-white hover:bg-white/10"
-                >
-                  <Search className="mr-2 h-5 w-5" />
-                  <span>Search History</span>
-                </Button>
-              </li>
-              <li>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-white hover:bg-white/10"
-                >
-                  <Globe className="mr-2 h-5 w-5" />
-                  <span>Discover</span>
-                </Button>
-              </li>
-              <li>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start text-white hover:bg-white/10"
-                >
-                  <Plus className="mr-2 h-5 w-5" />
-                  <span>New Space</span>
-                </Button>
-              </li>
-            </ul>
-          </nav>
+          {/* User Menu (collapsible) */}
+          {showUserMenu && (
+            <div className="bg-muted rounded-lg p-2 mb-4 text-sm space-y-2">
+              <Button variant="ghost" className="w-full justify-start" size="sm">
+                <User className="mr-2 h-4 w-4" />
+                Profile Settings
+              </Button>
+              <Button variant="ghost" className="w-full justify-start" size="sm">
+                <Settings className="mr-2 h-4 w-4" />
+                Preferences
+              </Button>
+              <Button variant="ghost" className="w-full justify-start" size="sm">
+                <Laptop className="mr-2 h-4 w-4" />
+                Developer Settings
+              </Button>
+            </div>
+          )}
           
-          {/* Search History */}
-          <div className="px-4 py-2">
-            <div className="text-sm font-medium text-gray-400 mb-2">Recent Searches</div>
-            <ScrollArea className="h-32 pr-2">
-              {searchHistory.length === 0 ? (
-                <div className="text-sm text-gray-500 p-2">
-                  No search history yet
-                </div>
-              ) : (
-                <div className="space-y-1">
-                  {searchHistory.slice(0, 5).map((item) => (
-                    <div key={item.id} className="flex items-center group">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full justify-start text-left truncate h-auto py-1 text-gray-300 hover:text-white hover:bg-white/10"
-                        onClick={() => onHistoryItemClick(item.query)}
-                      >
-                        <span className="truncate">{item.query}</span>
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </ScrollArea>
+          <Button
+            variant="outline"
+            className="w-full mb-4 justify-start"
+            onClick={() => window.location.reload()}
+          >
+            <Search className="mr-2 h-4 w-4" />
+            New Search
+          </Button>
+          
+          <div className="flex items-center space-x-2 mb-2">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="flex-1 h-8 px-2 text-muted-foreground"
+            >
+              <FileUp className="h-4 w-4 mr-1" />
+              Upload File
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="flex-1 h-8 px-2 text-muted-foreground"
+            >
+              <Mic className="h-4 w-4 mr-1" />
+              Voice Search
+            </Button>
           </div>
           
-          {/* User Profile */}
-          <div className="mt-auto">
-            <div className="p-4">
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-white hover:bg-white/10"
-              >
-                <User className="mr-2 h-5 w-5" />
-                <span>Account</span>
-              </Button>
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-white hover:bg-white/10"
-              >
-                <Download className="mr-2 h-5 w-5" />
-                <span>Install</span>
-              </Button>
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-sm font-medium text-muted-foreground">
+              Search History
+            </div>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 px-2 text-muted-foreground hover:text-destructive"
+              onClick={handleClearHistory}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          <ScrollArea className="flex-1 -mr-4 pr-4">
+            {searchHistory.length === 0 ? (
+              <div className="text-sm text-muted-foreground p-2">
+                No search history yet
+              </div>
+            ) : (
+              <div className="space-y-1">
+                {searchHistory.map((item) => (
+                  <div key={item.id} className="flex items-center group">
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-left truncate h-auto py-2 pr-8"
+                      onClick={() => onHistoryItemClick(item.query)}
+                    >
+                      <span className="truncate">{item.query}</span>
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 absolute right-4 text-muted-foreground hover:text-destructive"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteHistoryItem(item.id);
+                        toast.success("Search removed from history");
+                      }}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </ScrollArea>
+          
+          <div className="pt-4 border-t mt-4">
+            <div className="text-xs text-muted-foreground">
+              Curious Search Buddy © {new Date().getFullYear()}
             </div>
           </div>
         </div>
