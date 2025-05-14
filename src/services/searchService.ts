@@ -1,116 +1,156 @@
 
-import { SearchResult } from "@/types/search";
+import { SearchResult, Source } from "@/types/search";
+import { SearchType } from "@/components/search/SearchTypeToggle";
 
-// Simulated responses based on different queries
-const simulatedResponses: Record<string, Partial<SearchResult>> = {
-  "what is perplexity ai": {
-    content: "**Perplexity AI** is a conversational search engine that combines the capabilities of large language models with real-time web search to provide accurate, up-to-date answers to user queries.\n\nLaunched in 2022, Perplexity AI has gained popularity for its ability to deliver more comprehensive responses than traditional search engines. Unlike conventional search engines that return a list of links, Perplexity presents information in a conversational format with cited sources.\n\nThe platform works by using AI to search the internet in real-time, analyze various sources, and compile the information into coherent, detailed answers. This approach aims to provide direct answers to questions while maintaining transparency by showing where the information comes from.\n\nPerplexity offers both free and premium subscription tiers, with the paid version (Perplexity Pro) offering features like more powerful AI models, custom file uploads, and personalized responses.",
-    sources: [
-      {
-        title: "Perplexity AI - Official Website",
-        url: "https://www.perplexity.ai/",
-      },
-      {
-        title: "What is Perplexity AI: Features, Benefits & Alternatives",
-        url: "https://influencermarketinghub.com/what-is-perplexity-ai/",
-      },
-      {
-        title: "Perplexity AI: What It Is And How To Use It - Forbes",
-        url: "https://www.forbes.com/sites/qai/2023/09/05/perplexity-ai-what-it-is-and-how-to-use-it/",
-      }
-    ],
-  },
-  "what is react": {
-    content: "**React** is an open-source JavaScript library developed by Facebook (now Meta) for building user interfaces or UI components, particularly for single-page applications.\n\nCreated by Jordan Walke, a software engineer at Facebook, React was first deployed on Facebook's newsfeed in 2011 and later open-sourced in 2013. It has since become one of the most popular frontend libraries in web development.\n\nKey features of React include:\n\n1. **Component-Based Architecture**: React applications are built using components, which are reusable, self-contained pieces of code that return HTML via a render function.\n\n2. **Virtual DOM**: React creates a virtual representation of the UI in memory, which it uses to determine the most efficient way to update the actual DOM, improving performance.\n\n3. **Declarative Syntax**: Developers describe how the UI should look based on the current state, and React efficiently updates and renders components when data changes.\n\n4. **JSX**: React uses JSX, a syntax extension that allows you to write HTML-like code in JavaScript files.\n\n5. **Unidirectional Data Flow**: Data in React flows in one direction, from parent components to child components, making applications more predictable and easier to debug.\n\nReact is often used in combination with other libraries or frameworks, such as Redux for state management, and can be used to develop both web and mobile applications (through React Native).",
-    sources: [
-      {
-        title: "React – A JavaScript library for building user interfaces",
-        url: "https://react.dev/",
-      },
-      {
-        title: "Getting Started – React",
-        url: "https://react.dev/learn",
-      },
-      {
-        title: "React (software) - Wikipedia",
-        url: "https://en.wikipedia.org/wiki/React_(software)",
-      }
-    ],
-  },
-  "how to learn programming": {
-    content: "**Learning programming** is a journey that requires patience, persistence, and practice. Here's a comprehensive guide to get you started:\n\n**1. Choose a Programming Language**\nBeginners often start with languages like Python, JavaScript, or Ruby due to their readable syntax and supportive communities. Your choice might depend on your goals:\n- Web development: JavaScript, HTML, CSS\n- Data science: Python, R\n- Mobile apps: Swift (iOS), Kotlin (Android)\n- Game development: C#, C++\n\n**2. Understand Programming Fundamentals**\nRegardless of the language, focus on understanding key concepts:\n- Variables and data types\n- Control structures (if/else statements, loops)\n- Functions and methods\n- Data structures (arrays, lists, dictionaries)\n- Object-oriented programming concepts\n\n**3. Choose Learning Resources**\nMultiple resources are available for learning:\n- Online platforms: Codecademy, freeCodeCamp, Coursera, edX\n- Interactive tutorials: LeetCode, HackerRank\n- Documentation: Official language documentation\n- Books: \"Automate the Boring Stuff with Python\", \"Eloquent JavaScript\"\n- YouTube channels: Traversy Media, The Net Ninja, CS50\n\n**4. Practice Consistently**\nProgramming is a skill that improves with practice:\n- Start with small programs\n- Solve coding challenges on platforms like LeetCode or CodeWars\n- Participate in hackathons\n\n**5. Build Projects**\nApply your knowledge by building projects that interest you:\n- Simple games (Tic-tac-toe, Hangman)\n- Personal website or blog\n- Automation scripts for daily tasks\n- Mobile app for a specific need\n\n**6. Join Programming Communities**\nConnect with other programmers:\n- GitHub\n- Stack Overflow\n- Reddit programming communities\n- Local meetups or coding groups\n\n**7. Learn Version Control**\nUnderstand Git and GitHub to manage your code effectively.\n\n**8. Debug Effectively**\nDevelop problem-solving skills and learn to use debugging tools.\n\nRemember that learning to code is a marathon, not a sprint. Be patient with yourself and celebrate small victories along the way.",
-    sources: [
-      {
-        title: "Learn to Code — For Free — Coding Courses for Busy People",
-        url: "https://www.freecodecamp.org/",
-      },
-      {
-        title: "How to Start Learning Computer Programming | Codecademy",
-        url: "https://www.codecademy.com/resources/blog/how-to-start-coding/",
-      },
-      {
-        title: "Programming for Beginners: Where to Start?",
-        url: "https://www.geeksforgeeks.org/programming-for-beginners/",
-      }
-    ],
-  }
-};
-
-const defaultResponse = {
-  content: "I apologize, but I don't have specific information on that topic. Here are some general points that might help you start researching this subject:\n\n1. **Consider checking authoritative sources** related to your query for the most accurate and up-to-date information.\n\n2. **Look for recent publications or articles** that might cover this topic in detail.\n\n3. **Academic databases and journals** often contain peer-reviewed research that could provide valuable insights.\n\n4. **Industry experts and thought leaders** might have shared their perspectives on this through various platforms.\n\nFor more specific information, you might want to refine your search terms or consult specialized resources in this field.",
-  sources: [
-    {
-      title: "Google Search",
-      url: "https://www.google.com",
-    },
-    {
-      title: "Wikipedia",
-      url: "https://www.wikipedia.org",
-    },
-    {
-      title: "Scholar Research",
-      url: "https://scholar.google.com",
-    }
-  ]
-};
-
-// Simulated delay to mimic API call
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-export async function performSearch(query: string): Promise<SearchResult> {
-  // Simulate API delay
-  await delay(2000 + Math.random() * 2000);
+// Mock search function - in a real app, this would connect to a search API
+export const performSearch = async (query: string, searchType: SearchType = "web"): Promise<SearchResult> => {
+  // Simulate network delay
+  await new Promise(resolve => setTimeout(resolve, 1500));
   
-  // Normalize the query for matching
-  const normalizedQuery = query.toLowerCase().trim();
+  let content = "";
+  let sources: Source[] = [];
   
-  // Find a matching response or use default
-  let responseData: Partial<SearchResult> | undefined;
-  
-  // Check for exact matches first
-  if (normalizedQuery in simulatedResponses) {
-    responseData = simulatedResponses[normalizedQuery];
-  } else {
-    // Check for partial matches
-    for (const key of Object.keys(simulatedResponses)) {
-      if (normalizedQuery.includes(key) || key.includes(normalizedQuery)) {
-        responseData = simulatedResponses[key];
-        break;
-      }
-    }
+  switch (searchType) {
+    case "web":
+      content = generateWebContent(query);
+      sources = generateWebSources();
+      break;
+    case "chat":
+      content = generateChatContent(query);
+      sources = generateChatSources();
+      break;
+    case "image":
+      content = generateImageContent(query);
+      sources = generateImageSources();
+      break;
+    case "video":
+      content = generateVideoContent(query);
+      sources = generateVideoSources();
+      break;
+    default:
+      content = generateWebContent(query);
+      sources = generateWebSources();
   }
   
-  // Use default if no match found
-  if (!responseData) {
-    responseData = defaultResponse;
-  }
-  
-  // Return the complete result
   return {
-    id: Date.now().toString(),
     query,
-    content: responseData.content || "",
-    sources: responseData.sources || [],
+    content,
+    sources,
     timestamp: new Date(),
+    searchType
   };
+};
+
+// Mock content generators for different search types
+function generateWebContent(query: string): string {
+  return `**${query}** is a topic of significant interest. Based on the latest research from multiple credible sources, we can provide a comprehensive overview.\n\n${generateParagraphs(3)}\n\nFurthermore, recent studies have shown that ${generateParagraph()}`;
+}
+
+function generateChatContent(query: string): string {
+  return `I'd be happy to help with **${query}**!\n\n${generateParagraph()}\n\nDoes that answer your question? If not, feel free to ask follow-up questions and I can provide more details on specific aspects you're curious about.`;
+}
+
+function generateImageContent(query: string): string {
+  return `Here are some visual results for **${query}**. Images can provide valuable visual context to understand this topic better.\n\n${generateParagraph()}\n\nThese images come from various reputable sources and illustrate key aspects of the topic.`;
+}
+
+function generateVideoContent(query: string): string {
+  return `Video resources for **${query}** can offer in-depth explanations and visual demonstrations.\n\n${generateParagraph()}\n\nThese videos provide different perspectives and levels of detail on the topic, from brief overviews to comprehensive tutorials.`;
+}
+
+// Mock source generators
+function generateWebSources(): Source[] {
+  return [
+    {
+      title: "Comprehensive Guide to Modern Technology",
+      url: "https://example.com/tech-guide",
+    },
+    {
+      title: "Latest Research Findings and Analysis",
+      url: "https://research.example.org/findings",
+    },
+    {
+      title: "Expert Opinions and Insights",
+      url: "https://experts.example.net/insights",
+    },
+  ];
+}
+
+function generateChatSources(): Source[] {
+  return [
+    {
+      title: "Interactive Learning Platform",
+      url: "https://learn.example.com/interactive",
+    },
+    {
+      title: "Expert Q&A Database",
+      url: "https://qa.example.org/expert-answers",
+    },
+  ];
+}
+
+function generateImageSources(): Source[] {
+  return [
+    {
+      title: "Visual Reference Library",
+      url: "https://images.example.com/library",
+    },
+    {
+      title: "Stock Photography Collection",
+      url: "https://photos.example.org/stock",
+    },
+    {
+      title: "Infographic Repository",
+      url: "https://infographics.example.net",
+    },
+  ];
+}
+
+function generateVideoSources(): Source[] {
+  return [
+    {
+      title: "Educational Video Channel",
+      url: "https://videos.example.com/educational",
+    },
+    {
+      title: "Tutorial Library",
+      url: "https://tutorials.example.org/video",
+    },
+    {
+      title: "Expert Webinar Archive",
+      url: "https://webinars.example.net/archives",
+    },
+  ];
+}
+
+// Helper functions to generate random text
+function generateParagraph(): string {
+  const sentences = [
+    "This is a significant development in the field that challenges previous assumptions.",
+    "Experts have been researching this topic for decades with fascinating results.",
+    "Multiple studies confirm these findings across different contexts and populations.",
+    "The implications of this information are far-reaching for both theory and practice.",
+    "Understanding this concept requires looking at it from multiple perspectives.",
+    "Recent technological advances have made new approaches possible in this area.",
+    "There is still ongoing debate among specialists about certain aspects of this topic.",
+    "The historical context provides important insights into how this evolved over time."
+  ];
+  
+  const numberOfSentences = Math.floor(Math.random() * 3) + 3; // 3-5 sentences
+  const result = [];
+  
+  for (let i = 0; i < numberOfSentences; i++) {
+    const randomIndex = Math.floor(Math.random() * sentences.length);
+    result.push(sentences[randomIndex]);
+  }
+  
+  return result.join(" ");
+}
+
+function generateParagraphs(count: number): string {
+  const paragraphs = [];
+  for (let i = 0; i < count; i++) {
+    paragraphs.push(generateParagraph());
+  }
+  return paragraphs.join("\n\n");
 }

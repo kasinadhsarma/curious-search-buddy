@@ -5,15 +5,19 @@ import { Menu } from "lucide-react";
 import Sidebar, { SearchHistoryItem } from "@/components/layout/Sidebar";
 import SearchBar from "@/components/search/SearchBar";
 import ResultCard from "@/components/search/ResultCard";
+import SearchTypeToggle, { SearchType } from "@/components/search/SearchTypeToggle";
 import { performSearch } from "@/services/searchService";
 import { SearchResult } from "@/types/search";
 import { 
   getSearchHistory, 
   addSearchToHistory, 
   getSearchResultByQuery, 
-  addSearchResult 
+  addSearchResult,
+  clearSearchHistory,
+  deleteSearchHistoryItem
 } from "@/lib/storage";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { toast } from "sonner";
 
 const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,6 +25,7 @@ const Index = () => {
   const [currentQuery, setCurrentQuery] = useState("");
   const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
+  const [searchType, setSearchType] = useState<SearchType>("web");
   const isMobile = useIsMobile();
 
   // Load search history from localStorage on component mount
@@ -55,7 +60,7 @@ const Index = () => {
     } else {
       try {
         // Perform the search
-        const result = await performSearch(query);
+        const result = await performSearch(query, searchType);
         
         // Save result and update history
         addSearchResult(result);
@@ -70,7 +75,7 @@ const Index = () => {
         });
       } catch (error) {
         console.error("Search error:", error);
-        // Could show an error toast here
+        toast.error("Failed to perform search. Please try again.");
       } finally {
         setIsSearching(false);
       }
@@ -86,6 +91,24 @@ const Index = () => {
     handleSearch(query);
   };
 
+  const handleClearHistory = () => {
+    clearSearchHistory();
+    setSearchHistory([]);
+  };
+
+  const handleDeleteHistoryItem = (id: string) => {
+    deleteSearchHistoryItem(id);
+    setSearchHistory(prev => prev.filter(item => item.id !== id));
+  };
+
+  const handleSearchTypeChange = (type: SearchType) => {
+    setSearchType(type);
+    if (currentQuery && searchResult) {
+      // If we already have a query, search again with new type
+      handleSearch(currentQuery);
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
@@ -94,6 +117,8 @@ const Index = () => {
         setIsOpen={setSidebarOpen}
         searchHistory={searchHistory}
         onHistoryItemClick={handleHistoryItemClick}
+        clearHistory={handleClearHistory}
+        deleteHistoryItem={handleDeleteHistoryItem}
       />
       
       {/* Main Content */}
@@ -145,7 +170,13 @@ const Index = () => {
                   isSearching={isSearching}
                 />
               </div>
-              <div className="mt-12 flex flex-wrap justify-center gap-2">
+              
+              <SearchTypeToggle 
+                activeType={searchType} 
+                onChange={handleSearchTypeChange} 
+              />
+              
+              <div className="mt-8 flex flex-wrap justify-center gap-2">
                 <Button 
                   variant="outline"
                   onClick={() => handleSearch("What is Perplexity AI")}
@@ -171,6 +202,13 @@ const Index = () => {
             </div>
           ) : (
             <div className="max-w-3xl mx-auto">
+              {searchResult && (
+                <SearchTypeToggle 
+                  activeType={searchType} 
+                  onChange={handleSearchTypeChange} 
+                />
+              )}
+              
               {/* Loading state or results */}
               {isSearching ? (
                 <div className="animate-pulse space-y-4">

@@ -10,7 +10,14 @@ export const getSearchHistory = (): SearchHistoryItem[] => {
   try {
     const historyString = localStorage.getItem(SEARCH_HISTORY_KEY);
     if (!historyString) return [];
-    return JSON.parse(historyString);
+    
+    const history = JSON.parse(historyString);
+    
+    // Convert string dates back to Date objects
+    return history.map((item: any) => ({
+      ...item,
+      timestamp: new Date(item.timestamp),
+    }));
   } catch (error) {
     console.error("Failed to load search history:", error);
     return [];
@@ -52,6 +59,24 @@ export const addSearchToHistory = (query: string): SearchHistoryItem => {
       query,
       timestamp: new Date(),
     };
+  }
+};
+
+export const clearSearchHistory = (): void => {
+  try {
+    localStorage.removeItem(SEARCH_HISTORY_KEY);
+  } catch (error) {
+    console.error("Failed to clear search history:", error);
+  }
+};
+
+export const deleteSearchHistoryItem = (id: string): void => {
+  try {
+    const history = getSearchHistory();
+    const filteredHistory = history.filter(item => item.id !== id);
+    localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(filteredHistory));
+  } catch (error) {
+    console.error("Failed to delete search history item:", error);
   }
 };
 

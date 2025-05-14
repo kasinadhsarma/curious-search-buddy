@@ -4,13 +4,16 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Search, Home } from "lucide-react";
+import { Search, Home, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 type SidebarProps = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   searchHistory: SearchHistoryItem[];
   onHistoryItemClick: (query: string) => void;
+  clearHistory: () => void;
+  deleteHistoryItem: (id: string) => void;
 };
 
 export type SearchHistoryItem = {
@@ -24,8 +27,20 @@ const Sidebar: React.FC<SidebarProps> = ({
   setIsOpen,
   searchHistory,
   onHistoryItemClick,
+  clearHistory,
+  deleteHistoryItem,
 }) => {
   const isMobile = useIsMobile();
+  
+  const handleClearHistory = () => {
+    if (searchHistory.length === 0) {
+      toast.info("No search history to clear");
+      return;
+    }
+    
+    clearHistory();
+    toast.success("Search history cleared");
+  };
   
   return (
     <>
@@ -57,8 +72,18 @@ const Sidebar: React.FC<SidebarProps> = ({
             New Search
           </Button>
           
-          <div className="text-sm font-medium text-muted-foreground mb-2">
-            Search History
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-sm font-medium text-muted-foreground">
+              Search History
+            </div>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 px-2 text-muted-foreground hover:text-destructive"
+              onClick={handleClearHistory}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
           </div>
           
           <ScrollArea className="flex-1 -mr-4 pr-4">
@@ -69,14 +94,27 @@ const Sidebar: React.FC<SidebarProps> = ({
             ) : (
               <div className="space-y-1">
                 {searchHistory.map((item) => (
-                  <Button
-                    key={item.id}
-                    variant="ghost"
-                    className="w-full justify-start text-left truncate h-auto py-2"
-                    onClick={() => onHistoryItemClick(item.query)}
-                  >
-                    <span className="truncate">{item.query}</span>
-                  </Button>
+                  <div key={item.id} className="flex items-center group">
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-left truncate h-auto py-2 pr-8"
+                      onClick={() => onHistoryItemClick(item.query)}
+                    >
+                      <span className="truncate">{item.query}</span>
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 absolute right-4 text-muted-foreground hover:text-destructive"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteHistoryItem(item.id);
+                        toast.success("Search removed from history");
+                      }}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
                 ))}
               </div>
             )}
