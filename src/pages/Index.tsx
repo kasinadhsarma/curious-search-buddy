@@ -6,6 +6,9 @@ import Sidebar, { SearchHistoryItem } from "@/components/layout/Sidebar";
 import SearchBar from "@/components/search/SearchBar";
 import ResultCard from "@/components/search/ResultCard";
 import SearchTypeToggle, { SearchType } from "@/components/search/SearchTypeToggle";
+import SearchModelSelector, { SearchModel, SearchDomain } from "@/components/search/SearchModelSelector";
+import VoiceSearchInput from "@/components/search/VoiceSearchInput";
+import FileUploadInput from "@/components/search/FileUploadInput";
 import { performSearch } from "@/services/searchService";
 import { SearchResult } from "@/types/search";
 import { 
@@ -26,6 +29,11 @@ const Index = () => {
   const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
   const [searchType, setSearchType] = useState<SearchType>("web");
+  const [searchModel, setSearchModel] = useState<SearchModel>("default");
+  const [searchDomain, setSearchDomain] = useState<SearchDomain>("web");
+  const [showVoiceInput, setShowVoiceInput] = useState(false);
+  const [showFileUpload, setShowFileUpload] = useState(false);
+  const [fileContent, setFileContent] = useState<{ filename: string; content: string } | undefined>(undefined);
   const isMobile = useIsMobile();
 
   // Load search history from localStorage on component mount
@@ -60,7 +68,7 @@ const Index = () => {
     } else {
       try {
         // Perform the search
-        const result = await performSearch(query, searchType);
+        const result = await performSearch(query, searchType, searchModel, searchDomain, fileContent);
         
         // Save result and update history
         addSearchResult(result);
@@ -80,6 +88,11 @@ const Index = () => {
         setIsSearching(false);
       }
     }
+    
+    // Reset voice and file upload UI
+    setShowVoiceInput(false);
+    setShowFileUpload(false);
+    setFileContent(undefined);
     
     // Close sidebar on mobile after search
     if (isMobile) {
@@ -107,6 +120,41 @@ const Index = () => {
       // If we already have a query, search again with new type
       handleSearch(currentQuery);
     }
+  };
+
+  const handleSearchModelChange = (model: SearchModel) => {
+    setSearchModel(model);
+    if (currentQuery && searchResult) {
+      // If we already have a query, search again with new model
+      handleSearch(currentQuery);
+    }
+  };
+
+  const handleSearchDomainChange = (domain: SearchDomain) => {
+    setSearchDomain(domain);
+    if (currentQuery && searchResult) {
+      // If we already have a query, search again with new domain
+      handleSearch(currentQuery);
+    }
+  };
+
+  const handleVoiceTranscription = (text: string) => {
+    handleSearch(text);
+  };
+
+  const handleFileContent = (content: string, filename: string) => {
+    setFileContent({ content, filename });
+    toast.success(`File "${filename}" ready for search`);
+  };
+
+  const toggleVoiceInput = () => {
+    setShowVoiceInput(!showVoiceInput);
+    setShowFileUpload(false);
+  };
+
+  const toggleFileUpload = () => {
+    setShowFileUpload(!showFileUpload);
+    setShowVoiceInput(false);
   };
 
   return (
@@ -164,16 +212,49 @@ const Index = () => {
               <p className="text-lg text-center text-muted-foreground max-w-md mb-8">
                 Your AI-powered search companion. Ask anything and get comprehensive answers with sources.
               </p>
-              <div className="w-full max-w-2xl">
-                <SearchBar 
-                  onSearch={handleSearch} 
-                  isSearching={isSearching}
+              
+              {showVoiceInput ? (
+                <VoiceSearchInput onTranscription={handleVoiceTranscription} />
+              ) : showFileUpload ? (
+                <FileUploadInput onFileContent={handleFileContent} />
+              ) : (
+                <div className="w-full max-w-2xl">
+                  <SearchBar 
+                    onSearch={handleSearch} 
+                    isSearching={isSearching}
+                  />
+                  
+                  <div className="flex justify-center mt-2 space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={toggleVoiceInput}
+                    >
+                      Voice Search
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={toggleFileUpload}
+                    >
+                      Upload File
+                    </Button>
+                  </div>
+                </div>
+              )}
+              
+              <div className="mt-6">
+                <SearchTypeToggle 
+                  activeType={searchType} 
+                  onChange={handleSearchTypeChange} 
                 />
               </div>
               
-              <SearchTypeToggle 
-                activeType={searchType} 
-                onChange={handleSearchTypeChange} 
+              <SearchModelSelector
+                selectedModel={searchModel}
+                selectedDomain={searchDomain}
+                onModelChange={handleSearchModelChange}
+                onDomainChange={handleSearchDomainChange}
               />
               
               <div className="mt-8 flex flex-wrap justify-center gap-2">
@@ -202,12 +283,19 @@ const Index = () => {
             </div>
           ) : (
             <div className="max-w-3xl mx-auto">
-              {searchResult && (
+              <div className="mb-4">
                 <SearchTypeToggle 
                   activeType={searchType} 
                   onChange={handleSearchTypeChange} 
                 />
-              )}
+              </div>
+              
+              <SearchModelSelector
+                selectedModel={searchModel}
+                selectedDomain={searchDomain}
+                onModelChange={handleSearchModelChange}
+                onDomainChange={handleSearchDomainChange}
+              />
               
               {/* Loading state or results */}
               {isSearching ? (

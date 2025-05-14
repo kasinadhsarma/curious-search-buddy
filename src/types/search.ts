@@ -1,5 +1,6 @@
 
 import { SearchType } from "@/components/search/SearchTypeToggle";
+import { SearchModel, SearchDomain } from "@/components/search/SearchModelSelector";
 
 export interface Source {
   title: string;
@@ -11,5 +12,11 @@ export interface SearchResult {
   content: string;
   sources: Source[];
   timestamp: Date;
-  searchType?: SearchType; // Added to track what type of search was performed
+  searchType?: SearchType;
+  searchModel?: SearchModel;
+  searchDomain?: SearchDomain;
+  fileContent?: {
+    filename: string;
+    content: string;
+  };
 }
