@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, X, FileUp, Mic } from "lucide-react";
 import Sidebar, { SearchHistoryItem } from "@/components/layout/Sidebar";
 import SearchBar from "@/components/search/SearchBar";
 import ResultCard from "@/components/search/ResultCard";
@@ -157,8 +157,12 @@ const Index = () => {
     setShowVoiceInput(false);
   };
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-[#1A1F2C]">
       {/* Sidebar */}
       <Sidebar
         isOpen={sidebarOpen}
@@ -170,17 +174,17 @@ const Index = () => {
       />
       
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col text-white">
         {/* Header */}
-        <header className="sticky top-0 z-10 w-full bg-background border-b p-4">
+        <header className="sticky top-0 z-10 w-full bg-[#1A1F2C] border-b border-white/10 p-4">
           <div className="container mx-auto flex items-center justify-between">
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="md:hidden"
+              onClick={toggleSidebar}
+              className="text-white hover:bg-white/10"
             >
-              <Menu className="h-5 w-5" />
+              {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
             
             <div className="flex-1 flex justify-center">
@@ -191,7 +195,7 @@ const Index = () => {
                   defaultQuery={currentQuery}
                 />
               ) : (
-                <div className="text-xl font-semibold text-perplexity-600">
+                <div className="text-xl font-semibold text-[#9b87f5]">
                   Curious Search Buddy
                 </div>
               )}
@@ -203,13 +207,13 @@ const Index = () => {
         </header>
         
         {/* Main Content */}
-        <main className="flex-1 container mx-auto p-4 md:p-8">
+        <main className="flex-1 container mx-auto p-4 md:p-8 flex flex-col items-center">
           {!searchResult ? (
-            <div className="flex flex-col items-center justify-center min-h-[70vh]">
-              <h1 className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-perplexity-500 to-perplexity-700 bg-clip-text text-transparent">
+            <div className="flex flex-col items-center justify-center max-w-3xl w-full mx-auto mt-10">
+              <h1 className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] bg-clip-text text-transparent">
                 Curious Search Buddy
               </h1>
-              <p className="text-lg text-center text-muted-foreground max-w-md mb-8">
+              <p className="text-lg text-center text-gray-300 max-w-md mb-8">
                 Your AI-powered search companion. Ask anything and get comprehensive answers with sources.
               </p>
               
@@ -224,58 +228,74 @@ const Index = () => {
                     isSearching={isSearching}
                   />
                   
-                  <div className="flex justify-center mt-2 space-x-2">
+                  <div className="flex justify-center mt-4 space-x-4">
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      onClick={toggleVoiceInput}
+                      className="bg-transparent border border-white/20 hover:bg-white/10 text-white flex items-center gap-2"
+                      onClick={toggleFileUpload}
                     >
-                      Voice Search
+                      <FileUp className="h-4 w-4" />
+                      Upload File
                     </Button>
                     <Button 
                       variant="outline" 
                       size="sm"
-                      onClick={toggleFileUpload}
+                      className="bg-transparent border border-white/20 hover:bg-white/10 text-white flex items-center gap-2"
+                      onClick={toggleVoiceInput}
                     >
-                      Upload File
+                      <Mic className="h-4 w-4" />
+                      Voice Search
                     </Button>
                   </div>
                 </div>
               )}
               
-              <div className="mt-6">
-                <SearchTypeToggle 
-                  activeType={searchType} 
-                  onChange={handleSearchTypeChange} 
-                />
+              <div className="mt-8">
+                <div className="flex gap-4 justify-center mb-6">
+                  <Button variant="outline" className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white border-none px-8">
+                    Web
+                  </Button>
+                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-white px-8">
+                    Chat
+                  </Button>
+                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-white px-8">
+                    Images
+                  </Button>
+                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-white px-8">
+                    Videos
+                  </Button>
+                </div>
+                
+                <div className="flex justify-center gap-3 mb-10">
+                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-white px-4 py-1 h-8">
+                    Default AI
+                  </Button>
+                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-white px-4 py-1 h-8">
+                    Web
+                  </Button>
+                </div>
               </div>
               
-              <SearchModelSelector
-                selectedModel={searchModel}
-                selectedDomain={searchDomain}
-                onModelChange={handleSearchModelChange}
-                onDomainChange={handleSearchDomainChange}
-              />
-              
-              <div className="mt-8 flex flex-wrap justify-center gap-2">
+              <div className="mt-8 flex flex-wrap justify-center gap-3">
                 <Button 
                   variant="outline"
                   onClick={() => handleSearch("What is Perplexity AI")}
-                  className="m-1"
+                  className="bg-transparent border border-white/20 hover:bg-white/10 text-white"
                 >
                   What is Perplexity AI
                 </Button>
                 <Button 
                   variant="outline"
                   onClick={() => handleSearch("How to learn programming")}
-                  className="m-1"
+                  className="bg-transparent border border-white/20 hover:bg-white/10 text-white"
                 >
                   How to learn programming
                 </Button>
                 <Button 
                   variant="outline"
                   onClick={() => handleSearch("What is React")}
-                  className="m-1"
+                  className="bg-transparent border border-white/20 hover:bg-white/10 text-white"
                 >
                   What is React
                 </Button>
@@ -300,15 +320,15 @@ const Index = () => {
               {/* Loading state or results */}
               {isSearching ? (
                 <div className="animate-pulse space-y-4">
-                  <div className="h-8 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-8 bg-white/10 rounded w-3/4"></div>
                   <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 rounded"></div>
-                    <div className="h-4 bg-gray-200 rounded"></div>
-                    <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                    <div className="h-4 bg-white/10 rounded"></div>
+                    <div className="h-4 bg-white/10 rounded"></div>
+                    <div className="h-4 bg-white/10 rounded w-5/6"></div>
                   </div>
                   <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 rounded"></div>
-                    <div className="h-4 bg-gray-200 rounded w-4/6"></div>
+                    <div className="h-4 bg-white/10 rounded"></div>
+                    <div className="h-4 bg-white/10 rounded w-4/6"></div>
                   </div>
                 </div>
               ) : (
@@ -318,6 +338,10 @@ const Index = () => {
               )}
             </div>
           )}
+          
+          <div className="mt-auto text-xs text-center text-gray-500 py-4">
+            Curious Search Buddy © {new Date().getFullYear()}
+          </div>
         </main>
       </div>
     </div>
