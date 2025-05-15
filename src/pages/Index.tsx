@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, FileUp, Mic } from "lucide-react";
+import { Menu, X, MessageCircle, Image, Video, Search } from "lucide-react";
 import Sidebar, { SearchHistoryItem } from "@/components/layout/Sidebar";
 import SearchBar from "@/components/search/SearchBar";
 import ResultCard from "@/components/search/ResultCard";
@@ -9,6 +9,7 @@ import SearchTypeToggle, { SearchType } from "@/components/search/SearchTypeTogg
 import SearchModelSelector, { SearchModel, SearchDomain } from "@/components/search/SearchModelSelector";
 import VoiceSearchInput from "@/components/search/VoiceSearchInput";
 import FileUploadInput from "@/components/search/FileUploadInput";
+import ThemeToggle from "@/components/ThemeToggle";
 import { performSearch } from "@/services/searchService";
 import { SearchResult } from "@/types/search";
 import { 
@@ -162,7 +163,7 @@ const Index = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#1A1F2C]">
+    <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
       <Sidebar
         isOpen={sidebarOpen}
@@ -174,35 +175,40 @@ const Index = () => {
       />
       
       {/* Main Content */}
-      <div className="flex-1 flex flex-col text-white">
+      <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="sticky top-0 z-10 w-full bg-[#1A1F2C] border-b border-white/10 p-4">
+        <header className="sticky top-0 z-10 w-full bg-background border-b border-white/10 p-4">
           <div className="container mx-auto flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleSidebar}
-              className="text-white hover:bg-white/10"
-            >
-              {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
-            
-            <div className="flex-1 flex justify-center">
-              {searchResult ? (
-                <SearchBar 
-                  onSearch={handleSearch} 
-                  isSearching={isSearching} 
-                  defaultQuery={currentQuery}
-                />
-              ) : (
-                <div className="text-xl font-semibold text-[#9b87f5]">
+            <div className="flex items-center">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleSidebar}
+                className="text-foreground hover:bg-accent mr-2"
+              >
+                {sidebarOpen && isMobile ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </Button>
+              
+              {searchResult ? null : (
+                <div className="text-xl font-semibold text-[#9b87f5] hidden sm:block">
                   Curious Search Buddy
                 </div>
               )}
             </div>
             
-            <div className="w-10"> {/* Empty div for alignment */}
-            </div>
+            {searchResult && (
+              <div className="flex-1 flex justify-center max-w-2xl mx-auto">
+                <SearchBar 
+                  onSearch={handleSearch} 
+                  isSearching={isSearching} 
+                  defaultQuery={currentQuery}
+                  onVoiceSearchClick={toggleVoiceInput}
+                  onFileUploadClick={toggleFileUpload}
+                />
+              </div>
+            )}
+            
+            <ThemeToggle className="text-foreground hover:bg-accent" />
           </div>
         </header>
         
@@ -213,7 +219,7 @@ const Index = () => {
               <h1 className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] bg-clip-text text-transparent">
                 Curious Search Buddy
               </h1>
-              <p className="text-lg text-center text-gray-300 max-w-md mb-8">
+              <p className="text-lg text-center text-gray-300 dark:text-gray-300 max-w-md mb-8">
                 Your AI-powered search companion. Ask anything and get comprehensive answers with sources.
               </p>
               
@@ -226,52 +232,57 @@ const Index = () => {
                   <SearchBar 
                     onSearch={handleSearch} 
                     isSearching={isSearching}
+                    onVoiceSearchClick={toggleVoiceInput}
+                    onFileUploadClick={toggleFileUpload}
                   />
                   
-                  <div className="flex justify-center mt-4 space-x-4">
+                  <div className="flex justify-center mt-6 space-x-2">
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="bg-transparent border border-white/20 hover:bg-white/10 text-white flex items-center gap-2"
-                      onClick={toggleFileUpload}
+                      className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground flex items-center gap-2"
+                      onClick={() => handleSearchTypeChange("web")}
                     >
-                      <FileUp className="h-4 w-4" />
-                      Upload File
+                      <Search className="h-4 w-4" />
+                      Web
                     </Button>
                     <Button 
                       variant="outline" 
                       size="sm"
-                      className="bg-transparent border border-white/20 hover:bg-white/10 text-white flex items-center gap-2"
-                      onClick={toggleVoiceInput}
+                      className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground flex items-center gap-2"
+                      onClick={() => handleSearchTypeChange("chat")}
                     >
-                      <Mic className="h-4 w-4" />
-                      Voice Search
+                      <MessageCircle className="h-4 w-4" />
+                      Chat
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground flex items-center gap-2"
+                      onClick={() => handleSearchTypeChange("image")}
+                    >
+                      <Image className="h-4 w-4" />
+                      Images
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground flex items-center gap-2"
+                      onClick={() => handleSearchTypeChange("video")}
+                    >
+                      <Video className="h-4 w-4" />
+                      Videos
                     </Button>
                   </div>
                 </div>
               )}
               
               <div className="mt-8">
-                <div className="flex gap-4 justify-center mb-6">
-                  <Button variant="outline" className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white border-none px-8">
-                    Web
-                  </Button>
-                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-white px-8">
-                    Chat
-                  </Button>
-                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-white px-8">
-                    Images
-                  </Button>
-                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-white px-8">
-                    Videos
-                  </Button>
-                </div>
-                
                 <div className="flex justify-center gap-3 mb-10">
-                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-white px-4 py-1 h-8">
+                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground px-4 py-1 h-8">
                     Default AI
                   </Button>
-                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-white px-4 py-1 h-8">
+                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground px-4 py-1 h-8">
                     Web
                   </Button>
                 </div>
@@ -281,28 +292,28 @@ const Index = () => {
                 <Button 
                   variant="outline"
                   onClick={() => handleSearch("What is Perplexity AI")}
-                  className="bg-transparent border border-white/20 hover:bg-white/10 text-white"
+                  className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground"
                 >
                   What is Perplexity AI
                 </Button>
                 <Button 
                   variant="outline"
                   onClick={() => handleSearch("How to learn programming")}
-                  className="bg-transparent border border-white/20 hover:bg-white/10 text-white"
+                  className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground"
                 >
                   How to learn programming
                 </Button>
                 <Button 
                   variant="outline"
                   onClick={() => handleSearch("What is React")}
-                  className="bg-transparent border border-white/20 hover:bg-white/10 text-white"
+                  className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground"
                 >
                   What is React
                 </Button>
               </div>
             </div>
           ) : (
-            <div className="max-w-3xl mx-auto">
+            <div className="max-w-3xl mx-auto w-full">
               <div className="mb-4">
                 <SearchTypeToggle 
                   activeType={searchType} 

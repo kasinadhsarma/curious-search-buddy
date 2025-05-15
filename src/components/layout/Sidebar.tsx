@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Search, Trash2, FileUp, Mic } from "lucide-react";
+import { Search, Trash2, Menu, X } from "lucide-react";
 import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
@@ -59,19 +59,20 @@ const Sidebar: React.FC<SidebarProps> = ({
         )}
       >
         <div className="flex flex-col h-full">
-          {/* User Profile Section */}
+          {/* Toggle button for mobile */}
+          <div className="absolute right-0 top-4 transform translate-x-full md:hidden">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsOpen(!isOpen)}
+              className="bg-[#211E2E] text-white hover:bg-[#2A2639] rounded-l-none h-10 w-8 flex items-center justify-center"
+            >
+              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
+          
+          {/* New Search Button */}
           <div className="p-4 border-b border-white/10">
-            <div className="flex items-center space-x-3 mb-4">
-              <Avatar className="h-8 w-8 rounded bg-[#9b87f5]/20 text-[#9b87f5]">
-                <AvatarImage src="" alt="User" />
-                <AvatarFallback>U</AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="text-sm font-medium text-white">Guest User</div>
-                <div className="text-xs text-gray-400">Basic Plan</div>
-              </div>
-            </div>
-            
             <Button
               variant="outline"
               className="w-full justify-start bg-transparent border border-white/20 hover:bg-white/10 text-white"
@@ -133,7 +134,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </ScrollArea>
           </div>
           
-          {/* Sidebar Footer - Plans */}
+          {/* User Profile Section (Moved to bottom) */}
           <div className="mt-auto border-t border-white/10 p-4">
             <div className="space-y-3">
               <div className="text-sm font-medium text-gray-300">Plans</div>
@@ -159,6 +160,17 @@ const Sidebar: React.FC<SidebarProps> = ({
                 >
                   Team Plan
                 </Button>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3 mt-4 pt-4 border-t border-white/10">
+              <Avatar className="h-8 w-8 rounded bg-[#9b87f5]/20 text-[#9b87f5]">
+                <AvatarImage src="" alt="User" />
+                <AvatarFallback>U</AvatarFallback>
+              </Avatar>
+              <div>
+                <div className="text-sm font-medium text-white">Guest User</div>
+                <div className="text-xs text-gray-400">Basic Plan</div>
               </div>
             </div>
             
