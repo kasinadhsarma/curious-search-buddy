@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, MessageCircle, Image, Video, Search } from "lucide-react";
@@ -41,7 +40,10 @@ const Index = () => {
   useEffect(() => {
     const history = getSearchHistory();
     setSearchHistory(history);
-  }, []);
+    
+    // Initialize sidebar based on screen size
+    setSidebarOpen(!isMobile);
+  }, [isMobile]);
 
   const handleSearch = async (query: string) => {
     if (isSearching) return;
@@ -177,14 +179,14 @@ const Index = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="sticky top-0 z-10 w-full bg-background border-b border-white/10 p-4">
+        <header className="sticky top-0 z-10 w-full bg-background border-b dark:border-white/10 light:border-black/10 p-4">
           <div className="container mx-auto flex items-center justify-between">
             <div className="flex items-center">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleSidebar}
-                className="text-foreground hover:bg-accent mr-2"
+                className="hover:bg-accent mr-2"
               >
                 {sidebarOpen && isMobile ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
@@ -208,7 +210,7 @@ const Index = () => {
               </div>
             )}
             
-            <ThemeToggle className="text-foreground hover:bg-accent" />
+            <ThemeToggle className="hover:bg-accent" />
           </div>
         </header>
         

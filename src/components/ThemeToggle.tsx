@@ -16,7 +16,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
     if (savedTheme === "light") {
       setIsDark(false);
       document.documentElement.classList.remove("dark");
-      document.body.classList.remove("bg-[#1A1F2C]");
+      document.body.classList.remove("bg-[#1A1F2C]", "text-white");
       document.body.classList.add("bg-white", "text-black");
     } else {
       setIsDark(true);
@@ -31,7 +31,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
     if (isDark) {
       // Switch to light mode
       document.documentElement.classList.remove("dark");
-      document.body.classList.remove("bg-[#1A1F2C]");
+      document.body.classList.remove("bg-[#1A1F2C]", "text-white");
       document.body.classList.add("bg-white", "text-black");
       localStorage.setItem("theme", "light");
     } else {
