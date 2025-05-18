@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useAuth } from "@/contexts/AuthContext";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Google } from "lucide-react";
+import { Mail } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -89,7 +89,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
         </div>
       </div>
       <Button type="button" variant="outline" className="w-full" onClick={handleGoogleSignIn}>
-        <Google className="mr-2 h-4 w-4" /> Google
+        <Mail className="mr-2 h-4 w-4" /> Google
       </Button>
     </div>
   );
