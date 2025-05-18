@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, MessageCircle, Image, Video, Search } from "lucide-react";
+import { Menu, X, MessageCircle, Image, Video } from "lucide-react";
 import Sidebar, { SearchHistoryItem } from "@/components/layout/Sidebar";
 import SearchBar from "@/components/search/SearchBar";
 import ResultCard from "@/components/search/ResultCard";
 import SearchTypeToggle, { SearchType } from "@/components/search/SearchTypeToggle";
-import SearchModelSelector, { SearchModel, SearchDomain } from "@/components/search/SearchModelSelector";
+import CustomSearchModelSelector from "@/components/search/CustomSearchModelSelector";
+import { SearchModel, SearchDomain } from "@/components/search/SearchModelSelector";
 import VoiceSearchInput from "@/components/search/VoiceSearchInput";
 import FileUploadInput from "@/components/search/FileUploadInput";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -21,6 +22,7 @@ import {
 } from "@/lib/storage";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
+import CuriousSearchBuddyIcon from "@/components/icons/CuriousSearchBuddyIcon";
 
 const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -238,56 +240,57 @@ const Index = () => {
                     onFileUploadClick={toggleFileUpload}
                   />
                   
-                  <div className="flex justify-center mt-6 space-x-2">
+                  <div className="flex justify-center mt-6 space-x-4">
                     <Button 
                       variant="outline" 
-                      size="sm" 
-                      className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground flex items-center gap-2"
+                      size="icon"
+                      className="rounded-full bg-transparent border border-white/20 hover:bg-white/10"
                       onClick={() => handleSearchTypeChange("web")}
                     >
-                      <Search className="h-4 w-4" />
-                      Web
+                      <CuriousSearchBuddyIcon className="h-5 w-5" />
+                      <span className="sr-only">Web Search</span>
                     </Button>
+                    
                     <Button 
                       variant="outline" 
-                      size="sm"
-                      className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground flex items-center gap-2"
+                      size="icon"
+                      className="rounded-full bg-transparent border border-white/20 hover:bg-white/10"
                       onClick={() => handleSearchTypeChange("chat")}
                     >
-                      <MessageCircle className="h-4 w-4" />
-                      Chat
+                      <MessageCircle className="h-5 w-5" />
+                      <span className="sr-only">Chat</span>
                     </Button>
+                    
                     <Button 
                       variant="outline" 
-                      size="sm"
-                      className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground flex items-center gap-2"
+                      size="icon"
+                      className="rounded-full bg-transparent border border-white/20 hover:bg-white/10"
                       onClick={() => handleSearchTypeChange("image")}
                     >
-                      <Image className="h-4 w-4" />
-                      Images
+                      <Image className="h-5 w-5" />
+                      <span className="sr-only">Images</span>
                     </Button>
+                    
                     <Button 
                       variant="outline" 
-                      size="sm"
-                      className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground flex items-center gap-2"
+                      size="icon"
+                      className="rounded-full bg-transparent border border-white/20 hover:bg-white/10"
                       onClick={() => handleSearchTypeChange("video")}
                     >
-                      <Video className="h-4 w-4" />
-                      Videos
+                      <Video className="h-5 w-5" />
+                      <span className="sr-only">Videos</span>
                     </Button>
                   </div>
                 </div>
               )}
               
               <div className="mt-8">
-                <div className="flex justify-center gap-3 mb-10">
-                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground px-4 py-1 h-8">
-                    Default AI
-                  </Button>
-                  <Button variant="outline" className="bg-transparent border border-white/20 hover:bg-white/10 text-foreground px-4 py-1 h-8">
-                    Web
-                  </Button>
-                </div>
+                <CustomSearchModelSelector
+                  selectedModel={searchModel}
+                  selectedDomain={searchDomain}
+                  onModelChange={handleSearchModelChange}
+                  onDomainChange={handleSearchDomainChange}
+                />
               </div>
               
               <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -323,7 +326,7 @@ const Index = () => {
                 />
               </div>
               
-              <SearchModelSelector
+              <CustomSearchModelSelector
                 selectedModel={searchModel}
                 selectedDomain={searchDomain}
                 onModelChange={handleSearchModelChange}

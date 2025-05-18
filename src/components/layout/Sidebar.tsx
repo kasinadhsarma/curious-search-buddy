@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Search, Trash2, Menu, X } from "lucide-react";
 import { toast } from "sonner";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import UserProfile from "@/components/user/UserProfile";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -182,15 +182,8 @@ const Sidebar: React.FC<SidebarProps> = ({
               </div>
             </div>
             
-            <div className="flex items-center space-x-3 mt-4 pt-4 border-t dark:border-white/10 light:border-black/10">
-              <Avatar className="h-8 w-8 rounded dark:bg-[#9b87f5]/20 dark:text-[#9b87f5] light:bg-[#9b87f5]/10 light:text-[#9b87f5]">
-                <AvatarImage src="" alt="User" />
-                <AvatarFallback>U</AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="text-sm font-medium dark:text-white light:text-black">Guest User</div>
-                <div className="text-xs dark:text-gray-400 light:text-gray-600">Basic Plan</div>
-              </div>
+            <div className="mt-4 pt-4 border-t dark:border-white/10 light:border-black/10">
+              <UserProfile />
             </div>
             
             <div className="mt-4 pt-4 border-t dark:border-white/10 light:border-black/10">

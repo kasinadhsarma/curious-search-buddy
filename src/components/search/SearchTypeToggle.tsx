@@ -1,7 +1,9 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Search, MessageCircle, Image, Video } from "lucide-react";
+import { Search, MessageCircle, Image, Video, Bot } from "lucide-react";
+import CuriousSearchBuddyIcon from "../icons/CuriousSearchBuddyIcon";
+import { cn } from "@/lib/utils";
 
 export type SearchType = "web" | "chat" | "image" | "video";
 
@@ -14,43 +16,59 @@ const SearchTypeToggle: React.FC<SearchTypeToggleProps> = ({ activeType, onChang
   return (
     <div className="flex items-center justify-center my-4 space-x-2">
       <Button
-        variant={activeType === "web" ? "default" : "ghost"}
-        size="sm"
+        variant="ghost"
+        size="icon"
         onClick={() => onChange("web")}
-        className="flex items-center space-x-1"
+        className={cn(
+          "rounded-full",
+          activeType === "web" ? "bg-accent text-accent-foreground" : "text-muted-foreground"
+        )}
+        title="Web Search"
       >
-        <Search className="h-4 w-4" />
-        <span>Web</span>
+        <CuriousSearchBuddyIcon className="h-5 w-5" />
+        <span className="sr-only">Web</span>
       </Button>
       
       <Button
-        variant={activeType === "chat" ? "default" : "ghost"}
-        size="sm"
+        variant="ghost"
+        size="icon"
         onClick={() => onChange("chat")}
-        className="flex items-center space-x-1"
+        className={cn(
+          "rounded-full",
+          activeType === "chat" ? "bg-accent text-accent-foreground" : "text-muted-foreground"
+        )}
+        title="Chat"
       >
-        <MessageCircle className="h-4 w-4" />
-        <span>Chat</span>
+        <MessageCircle className="h-5 w-5" />
+        <span className="sr-only">Chat</span>
       </Button>
       
       <Button
-        variant={activeType === "image" ? "default" : "ghost"}
-        size="sm"
+        variant="ghost"
+        size="icon"
         onClick={() => onChange("image")}
-        className="flex items-center space-x-1"
+        className={cn(
+          "rounded-full",
+          activeType === "image" ? "bg-accent text-accent-foreground" : "text-muted-foreground"
+        )}
+        title="Images"
       >
-        <Image className="h-4 w-4" />
-        <span>Images</span>
+        <Image className="h-5 w-5" />
+        <span className="sr-only">Images</span>
       </Button>
       
       <Button
-        variant={activeType === "video" ? "default" : "ghost"}
-        size="sm"
+        variant="ghost"
+        size="icon"
         onClick={() => onChange("video")}
-        className="flex items-center space-x-1"
+        className={cn(
+          "rounded-full",
+          activeType === "video" ? "bg-accent text-accent-foreground" : "text-muted-foreground"
+        )}
+        title="Videos"
       >
-        <Video className="h-4 w-4" />
-        <span>Videos</span>
+        <Video className="h-5 w-5" />
+        <span className="sr-only">Videos</span>
       </Button>
     </div>
   );
