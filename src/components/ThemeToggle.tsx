@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
@@ -15,16 +14,33 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
   // Initialize theme from localStorage or default to dark mode
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "light") {
-      setIsDark(false);
-      document.documentElement.classList.remove("dark");
-      document.body.classList.remove("bg-[#1A1F2C]", "text-white");
-      document.body.classList.add("bg-white", "text-black");
-    } else {
-      setIsDark(true);
-      document.documentElement.classList.add("dark");
-      document.body.classList.add("bg-[#1A1F2C]", "text-white");
-      document.body.classList.remove("bg-white", "text-black");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    
+    // If theme is explicitly set in localStorage, use that
+    if (savedTheme) {
+      setIsDark(savedTheme === "dark");
+      document.documentElement.classList.toggle("dark", savedTheme === "dark");
+      
+      if (savedTheme === "dark") {
+        document.body.classList.add("bg-[#1A1F2C]", "text-white");
+        document.body.classList.remove("bg-white", "text-black");
+      } else {
+        document.body.classList.add("bg-white", "text-black");
+        document.body.classList.remove("bg-[#1A1F2C]", "text-white");
+      }
+    } 
+    // Otherwise use system preference
+    else {
+      setIsDark(prefersDark);
+      document.documentElement.classList.toggle("dark", prefersDark);
+      
+      if (prefersDark) {
+        document.body.classList.add("bg-[#1A1F2C]", "text-white");
+        document.body.classList.remove("bg-white", "text-black");
+      } else {
+        document.body.classList.add("bg-white", "text-black");
+        document.body.classList.remove("bg-[#1A1F2C]", "text-white");
+      }
     }
   }, []);
 

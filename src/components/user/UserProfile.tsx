@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,6 +33,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
+import AuthModal from "@/components/auth/AuthModal";
 
 interface UserProfileProps {
   className?: string;
@@ -41,7 +42,7 @@ interface UserProfileProps {
 
 const profileFormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email address." }),
+  email: z.string().email({ message: "Please enter a valid email address." }).optional(),
   bio: z.string().max(160).optional(),
 });
 
@@ -65,13 +66,14 @@ type NotificationsFormValues = z.infer<typeof notificationsFormSchema>;
 const UserProfile: React.FC<UserProfileProps> = ({ className }) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
+  const { currentUser, logOut, updateUserProfile } = useAuth();
   
   // Initialize forms
   const profileForm = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      name: "Guest User",
-      email: "guest@example.com",
+      name: currentUser?.displayName || "Guest User",
+      email: currentUser?.email || "",
       bio: "",
     },
   });
@@ -93,14 +95,44 @@ const UserProfile: React.FC<UserProfileProps> = ({ className }) => {
     },
   });
 
-  const onProfileSubmit = (data: ProfileFormValues) => {
-    toast.success("Profile updated successfully!");
-    console.log("Profile data:", data);
+  const onProfileSubmit = async (data: ProfileFormValues) => {
+    if (currentUser) {
+      await updateUserProfile(data.name);
+      toast.success("Profile updated successfully!");
+    }
   };
 
   const onAppearanceSubmit = (data: AppearanceFormValues) => {
+    // Apply theme change
+    const { theme } = data;
+    
+    if (theme === "light" || theme === "dark") {
+      localStorage.setItem("theme", theme);
+      document.documentElement.classList.toggle("dark", theme === "dark");
+      
+      if (theme === "dark") {
+        document.body.classList.add('bg-[#1A1F2C]', 'text-white');
+        document.body.classList.remove('bg-white', 'text-black');
+      } else {
+        document.body.classList.add('bg-white', 'text-black');
+        document.body.classList.remove('bg-[#1A1F2C]', 'text-white');
+      }
+    } else {
+      // System theme
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      localStorage.removeItem("theme");
+      document.documentElement.classList.toggle("dark", prefersDark);
+      
+      if (prefersDark) {
+        document.body.classList.add('bg-[#1A1F2C]', 'text-white');
+        document.body.classList.remove('bg-white', 'text-black');
+      } else {
+        document.body.classList.add('bg-white', 'text-black');
+        document.body.classList.remove('bg-[#1A1F2C]', 'text-white');
+      }
+    }
+    
     toast.success("Appearance settings updated!");
-    console.log("Appearance data:", data);
   };
 
   const onNotificationsSubmit = (data: NotificationsFormValues) => {
@@ -108,14 +140,43 @@ const UserProfile: React.FC<UserProfileProps> = ({ className }) => {
     console.log("Notifications data:", data);
   };
 
-  const handleSignOut = () => {
-    toast.info("You've been signed out.");
+  const handleSignOut = async () => {
+    await logOut();
     setIsSettingsOpen(false);
   };
 
   const handleUpgradePlan = () => {
     toast.info("Upgrade feature coming soon!");
   };
+  
+  // Get user initials for avatar fallback
+  const getInitials = () => {
+    if (currentUser?.displayName) {
+      return currentUser.displayName
+        .split(' ')
+        .map(name => name[0])
+        .join('')
+        .toUpperCase();
+    }
+    return "GU"; // Guest User
+  };
+  
+  // Check if user is logged in
+  if (!currentUser) {
+    return (
+      <div className={className}>
+        <AuthModal 
+          triggerElement={
+            <Button variant="ghost" className="p-0 h-auto hover:bg-transparent">
+              <Avatar className="h-8 w-8 cursor-pointer hover:opacity-80 dark:bg-[#9b87f5]/20 dark:text-[#9b87f5] light:bg-[#9b87f5]/10 light:text-[#9b87f5] ring-2 ring-[#9b87f5]/20">
+                <AvatarFallback>GU</AvatarFallback>
+              </Avatar>
+            </Button>
+          }
+        />
+      </div>
+    );
+  }
   
   return (
     <div className={className}>
@@ -124,8 +185,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ className }) => {
           <DialogTrigger asChild>
             <Button variant="ghost" className="p-0 h-auto hover:bg-transparent">
               <Avatar className="h-8 w-8 cursor-pointer hover:opacity-80 dark:bg-[#9b87f5]/20 dark:text-[#9b87f5] light:bg-[#9b87f5]/10 light:text-[#9b87f5] ring-2 ring-[#9b87f5]/20">
-                <AvatarImage src="" alt="User" />
-                <AvatarFallback>GU</AvatarFallback>
+                <AvatarImage src={currentUser.photoURL || ""} alt={currentUser.displayName || "User"} />
+                <AvatarFallback>{getInitials()}</AvatarFallback>
               </Avatar>
             </Button>
           </DialogTrigger>
@@ -180,8 +241,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ className }) => {
                           <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                              <Input placeholder="your.email@example.com" {...field} />
+                              <Input placeholder="your.email@example.com" {...field} disabled />
                             </FormControl>
+                            <FormDescription>Email cannot be changed</FormDescription>
                           </FormItem>
                         )}
                       />
@@ -458,7 +520,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ className }) => {
         </Dialog>
         
         <div>
-          <div className="text-sm font-medium dark:text-white light:text-black">Guest User</div>
+          <div className="text-sm font-medium dark:text-white light:text-black">
+            {currentUser.displayName || "Guest User"}
+          </div>
           <div className="text-xs dark:text-gray-400 light:text-gray-600">Basic Plan</div>
         </div>
       </div>
