@@ -4,38 +4,51 @@
   min-height: 100vh;
 }
 
+/* Search Input Styling */
 .perplexity-search-input {
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .dark .perplexity-search-input {
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 :not(.dark) .perplexity-search-input {
   background-color: rgba(0, 0, 0, 0.03);
   border: 1px solid rgba(0, 0, 0, 0.1);
   color: black;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .perplexity-search-input:focus-within {
   border-color: rgba(155, 135, 245, 0.5);
-  box-shadow: 0 0 0 2px rgba(155, 135, 245, 0.2);
+  box-shadow: 0 0 0 3px rgba(155, 135, 245, 0.2);
+  transform: translateY(-1px);
 }
 
+/* Button Styling */
 .perplexity-button {
   background-color: rgb(155, 135, 245);
   color: white;
   font-weight: 500;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .perplexity-button:hover {
   background-color: rgb(126, 105, 171);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(155, 135, 245, 0.2);
+}
+
+/* Glassmorphism Elements */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 /* Dark scrollbar styling */
@@ -84,4 +97,104 @@
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Animation effects */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes slideInFromBottom {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideInFromBottom 0.4s ease-out forwards;
+}
+
+/* V2.0 UI Improvements */
+.card-v2 {
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card-v2:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #9b87f5, #7E69AB);
+  transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+  background: linear-gradient(135deg, #8a76e4, #6d5a9a);
+  box-shadow: 0 4px 12px rgba(155, 135, 245, 0.3);
+}
+
+.input-v2 {
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.input-v2:focus {
+  box-shadow: 0 0 0 3px rgba(155, 135, 245, 0.2);
+  border-color: rgba(155, 135, 245, 0.5);
+}
+
+/* Modern Toggle Switch */
+.modern-toggle {
+  width: 44px;
+  height: 22px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 11px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.modern-toggle.active {
+  background-color: #9b87f5;
+}
+
+.modern-toggle .toggle-thumb {
+  width: 18px;
+  height: 18px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: all 0.3s ease;
+}
+
+.modern-toggle.active .toggle-thumb {
+  left: 24px;
+}
+
+/* Progress Bar */
+.progress-bar {
+  height: 4px;
+  background: linear-gradient(90deg, #9b87f5, #7E69AB);
+  border-radius: 2px;
+}
+
+/* Hero Gradient */
+.hero-gradient {
+  background: radial-gradient(circle at top right, rgba(155, 135, 245, 0.2) 0%, transparent 70%),
+              radial-gradient(circle at bottom left, rgba(126, 105, 171, 0.2) 0%, transparent 70%);
 }
