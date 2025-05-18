@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Bot, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type SearchModel = "default" | "pro" | "expert" | "specialist";
-export type SearchDomain = "web" | "academic" | "reddit" | "twitter" | "news";
+export type SearchModel = "default" | "deep" | "basic";
+export type SearchDomain = "web" | "academic" | "social";
 
 interface SearchModelSelectorProps {
   selectedModel: SearchModel;
