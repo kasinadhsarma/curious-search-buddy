@@ -3,74 +3,65 @@ import { SearchResult, Source } from "@/types/search";
 import { SearchType } from "@/components/search/SearchTypeToggle";
 import { SearchModel, SearchDomain } from "@/components/search/SearchModelSelector";
 
-// Mock search function - in a real app, this would connect to a search API
 export const performSearch = async (
-  query: string, 
-  searchType: SearchType = "web",
-  searchModel: SearchModel = "default",
-  searchDomain: SearchDomain = "web",
-  fileContent?: { filename: string; content: string }
+  query: string,
+  searchType: SearchType = "web", // Will be added back to the result by frontend
+  searchModel: SearchModel = "default", // Will be added back to the result by frontend
+  searchDomain: SearchDomain = "web", // Will be added back to the result by frontend
+  fileContent?: { filename: string; content: string } // Will be handled later if needed
 ): Promise<SearchResult> => {
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 1500));
-  
-  let content = "";
-  let sources: Source[] = [];
-  
-  // Base content based on search type
-  switch (searchType) {
-    case "web":
-      content = generateWebContent(query, searchModel, searchDomain);
-      sources = generateWebSources(searchDomain);
-      break;
-    case "chat":
-      content = generateChatContent(query, searchModel);
-      sources = generateChatSources();
-      break;
-    case "image":
-      content = generateImageContent(query);
-      sources = generateImageSources();
-      break;
-    case "video":
-      content = generateVideoContent(query);
-      sources = generateVideoSources();
-      break;
-    default:
-      content = generateWebContent(query, searchModel, searchDomain);
-      sources = generateWebSources(searchDomain);
-  }
-  
-  // Add file content context if provided
-  if (fileContent) {
-    content = `Analyzing file: **${fileContent.filename}**\n\n${content}\n\nBased on the content of your document, ${generateParagraph()}`; 
-    
-    // Add a file source
-    sources.push({
-      title: `Uploaded File: ${fileContent.filename}`,
-      url: "#file-upload",
+  try {
+    const response = await fetch("/api/v1/search", { // Vite will proxy this
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query: query }), // Only sending query for now
     });
-  }
-  
-  // Different content based on search model
-  if (searchModel === "deep") {
-    content += `\n\n### Deep Research Analysis\n${generateParagraphs(2)}`;
-    
-    // Add more academic sources for deep research
-    if (searchDomain === "academic") {
-      sources = [...sources, ...generateAcademicSources()];
+
+    if (!response.ok) {
+      // Try to get error message from backend if available
+      let errorMsg = `Error from backend: ${response.status} ${response.statusText}`;
+      try {
+        const errorData = await response.json();
+        errorMsg = errorData.detail || errorData.content || errorMsg;
+      } catch (e) {
+        // Ignore if error response is not JSON
+      }
+      throw new Error(errorMsg);
     }
+
+    const backendResponse = await response.json();
+
+    // Construct the full SearchResult for the frontend
+    // Backend provides: query (should match input), content, sources
+    // Frontend adds: timestamp, and the original searchType, searchModel, searchDomain
+    return {
+      query: backendResponse.query, // or simply use the input query
+      content: backendResponse.content,
+      sources: backendResponse.sources as Source[], // Assume backend sources match frontend type
+      timestamp: new Date(),
+      searchType,
+      searchModel,
+      searchDomain,
+      fileContent, // Include fileContent in the result, even if not processed by backend
+    };
+
+  } catch (error)
+  {
+    console.error("Search service error:", error);
+    // Return a SearchResult with error information
+    return {
+      query,
+      content: error instanceof Error ? error.message : "An unknown error occurred during search.",
+      sources: [],
+      timestamp: new Date(),
+      searchType,
+      searchModel,
+      searchDomain,
+      fileContent, // Include fileContent in the error result as well
+    };
   }
-  
-  return {
-    query,
-    content,
-    sources,
-    timestamp: new Date(),
-    searchType,
-    searchModel,
-    searchDomain,
-    fileContent
-  };
 };
 
 // Mock content generators for different search types and models
