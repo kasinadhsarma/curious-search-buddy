@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, MessageCircle, Image, Video, Sparkles } from "lucide-react";
@@ -187,33 +188,33 @@ const Index = () => {
       
       {/* Main Content */}
       <div className="flex-1 flex flex-col relative z-10">
-        {/* Enhanced Header */}
-        <header className="sticky top-0 z-20 w-full bg-background/80 backdrop-blur-xl border-b border-white/10 p-4 shadow-lg">
+        {/* Enhanced Header - Mobile Optimized */}
+        <header className="sticky top-0 z-20 w-full bg-background/80 backdrop-blur-xl border-b border-white/10 p-3 md:p-4 shadow-lg">
           <div className="container mx-auto flex items-center justify-between">
             <div className="flex items-center">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleSidebar}
-                className="hover:bg-accent mr-2 rounded-xl transition-all duration-300 hover:scale-105"
+                className="hover:bg-accent mr-2 rounded-xl transition-all duration-300 hover:scale-105 h-10 w-10 md:h-auto md:w-auto"
               >
                 {sidebarOpen && isMobile ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
               
-              {searchResult ? null : (
-                <div className="flex items-center space-x-2 hidden sm:flex">
-                  <div className="w-8 h-8 bg-gradient-to-br from-[#9b87f5] to-[#7E69AB] rounded-lg flex items-center justify-center">
-                    <Sparkles className="h-5 w-5 text-white" />
+              {!searchResult && (
+                <div className="flex items-center space-x-2">
+                  <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-br from-[#9b87f5] to-[#7E69AB] rounded-lg flex items-center justify-center">
+                    <Sparkles className="h-3 w-3 md:h-5 md:w-5 text-white" />
                   </div>
-                  <div className="text-xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] bg-clip-text text-transparent">
-                    Curious Search Buddy
+                  <div className="text-sm md:text-xl font-bold bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] bg-clip-text text-transparent">
+                    {isMobile ? "Search Buddy" : "Curious Search Buddy"}
                   </div>
                 </div>
               )}
             </div>
             
             {searchResult && (
-              <div className="flex-1 flex justify-center max-w-2xl mx-auto">
+              <div className="flex-1 flex justify-center max-w-2xl mx-auto px-2">
                 <SearchBar 
                   onSearch={handleSearch} 
                   isSearching={isSearching} 
@@ -224,48 +225,48 @@ const Index = () => {
               </div>
             )}
             
-            <ThemeToggle className="hover:bg-accent rounded-xl transition-all duration-300 hover:scale-105" />
+            <ThemeToggle className="hover:bg-accent rounded-xl transition-all duration-300 hover:scale-105 h-10 w-10 md:h-auto md:w-auto" />
           </div>
         </header>
         
-        {/* Enhanced Main Content */}
-        <main className="flex-1 container mx-auto p-4 md:p-8 flex flex-col items-center relative">
+        {/* Enhanced Main Content - Mobile Optimized */}
+        <main className="flex-1 container mx-auto p-3 md:p-4 lg:p-8 flex flex-col items-center relative">
           {!searchResult ? (
-            <div className="flex flex-col items-center justify-center max-w-4xl w-full mx-auto mt-10 space-y-8">
-              {/* Enhanced Hero Section */}
-              <div className="text-center space-y-6">
-                <div className="flex justify-center mb-6">
+            <div className="flex flex-col items-center justify-center max-w-4xl w-full mx-auto mt-4 md:mt-10 space-y-6 md:space-y-8">
+              {/* Enhanced Hero Section - Mobile Optimized */}
+              <div className="text-center space-y-4 md:space-y-6">
+                <div className="flex justify-center mb-4 md:mb-6">
                   <div className="relative">
-                    <div className="w-20 h-20 bg-gradient-to-br from-[#9b87f5] to-[#7E69AB] rounded-2xl flex items-center justify-center shadow-2xl transform rotate-3 animate-pulse">
-                      <CuriousSearchBuddyIcon className="h-10 w-10 text-white" />
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-[#9b87f5] to-[#7E69AB] rounded-2xl flex items-center justify-center shadow-2xl transform rotate-3 animate-pulse">
+                      <CuriousSearchBuddyIcon className="h-8 w-8 md:h-10 md:w-10 text-white" />
                     </div>
-                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full animate-bounce"></div>
+                    <div className="absolute -top-2 -right-2 w-5 h-5 md:w-6 md:h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full animate-bounce"></div>
                   </div>
                 </div>
                 
-                <h1 className="text-5xl md:text-6xl font-black text-center mb-6 bg-gradient-to-r from-[#9b87f5] via-[#7E69AB] to-[#9b87f5] bg-clip-text text-transparent animate-gradient bg-300% leading-tight">
+                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-center mb-4 md:mb-6 bg-gradient-to-r from-[#9b87f5] via-[#7E69AB] to-[#9b87f5] bg-clip-text text-transparent animate-gradient bg-300% leading-tight px-2">
                   Curious Search Buddy
                 </h1>
                 
-                <p className="text-xl text-center text-muted-foreground max-w-2xl mb-8 leading-relaxed">
+                <p className="text-base md:text-xl text-center text-muted-foreground max-w-2xl mb-6 md:mb-8 leading-relaxed px-4">
                   Your AI-powered search companion with advanced intelligence. 
-                  <span className="block mt-2 text-lg bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] bg-clip-text text-transparent font-semibold">
+                  <span className="block mt-2 text-sm md:text-lg bg-gradient-to-r from-[#9b87f5] to-[#7E69AB] bg-clip-text text-transparent font-semibold">
                     Ask anything and get comprehensive answers with sources.
                   </span>
                 </p>
               </div>
               
-              {/* Enhanced Search Interface */}
+              {/* Enhanced Search Interface - Mobile Optimized */}
               {showVoiceInput ? (
-                <div className="w-full max-w-2xl">
+                <div className="w-full max-w-2xl px-4">
                   <VoiceSearchInput onTranscription={handleVoiceTranscription} />
                 </div>
               ) : showFileUpload ? (
-                <div className="w-full max-w-2xl">
+                <div className="w-full max-w-2xl px-4">
                   <FileUploadInput onFileContent={handleFileContent} />
                 </div>
               ) : (
-                <div className="w-full max-w-2xl space-y-8">
+                <div className="w-full max-w-2xl space-y-6 md:space-y-8 px-4">
                   <div className="relative">
                     <SearchBar 
                       onSearch={handleSearch} 
@@ -274,12 +275,12 @@ const Index = () => {
                       onFileUploadClick={toggleFileUpload}
                     />
                     
-                    {/* Search type buttons with enhanced styling */}
-                    <div className="flex justify-center mt-8 space-x-3">
+                    {/* Search type buttons with enhanced styling - Mobile Optimized */}
+                    <div className="flex justify-center mt-6 md:mt-8 space-x-2 md:space-x-3">
                       <Button 
                         variant="outline" 
                         size="icon"
-                        className="rounded-2xl bg-white/5 border border-white/20 hover:bg-gradient-to-br hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm"
+                        className="h-12 w-12 md:h-auto md:w-auto rounded-2xl bg-white/5 border border-white/20 hover:bg-gradient-to-br hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm"
                         onClick={() => handleSearchTypeChange("web")}
                       >
                         <CuriousSearchBuddyIcon className="h-5 w-5" />
@@ -289,7 +290,7 @@ const Index = () => {
                       <Button 
                         variant="outline" 
                         size="icon"
-                        className="rounded-2xl bg-white/5 border border-white/20 hover:bg-gradient-to-br hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm"
+                        className="h-12 w-12 md:h-auto md:w-auto rounded-2xl bg-white/5 border border-white/20 hover:bg-gradient-to-br hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm"
                         onClick={() => handleSearchTypeChange("chat")}
                       >
                         <MessageCircle className="h-5 w-5" />
@@ -299,7 +300,7 @@ const Index = () => {
                       <Button 
                         variant="outline" 
                         size="icon"
-                        className="rounded-2xl bg-white/5 border border-white/20 hover:bg-gradient-to-br hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm"
+                        className="h-12 w-12 md:h-auto md:w-auto rounded-2xl bg-white/5 border border-white/20 hover:bg-gradient-to-br hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm"
                         onClick={() => handleSearchTypeChange("image")}
                       >
                         <Image className="h-5 w-5" />
@@ -309,7 +310,7 @@ const Index = () => {
                       <Button 
                         variant="outline" 
                         size="icon"
-                        className="rounded-2xl bg-white/5 border border-white/20 hover:bg-gradient-to-br hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm"
+                        className="h-12 w-12 md:h-auto md:w-auto rounded-2xl bg-white/5 border border-white/20 hover:bg-gradient-to-br hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm"
                         onClick={() => handleSearchTypeChange("video")}
                       >
                         <Video className="h-5 w-5" />
@@ -320,8 +321,8 @@ const Index = () => {
                 </div>
               )}
               
-              {/* Enhanced Model Selector */}
-              <div className="w-full max-w-4xl">
+              {/* Enhanced Model Selector - Mobile Optimized */}
+              <div className="w-full max-w-4xl px-4">
                 <CustomSearchModelSelector
                   selectedModel={searchModel}
                   selectedDomain={searchDomain}
@@ -330,26 +331,29 @@ const Index = () => {
                 />
               </div>
               
-              {/* Enhanced Quick Search Buttons */}
-              <div className="flex flex-wrap justify-center gap-4 max-w-3xl">
+              {/* Enhanced Quick Search Buttons - Mobile Optimized */}
+              <div className="flex flex-wrap justify-center gap-2 md:gap-4 max-w-3xl px-4">
                 <Button 
                   variant="outline"
+                  size={isMobile ? "sm" : "default"}
                   onClick={() => handleSearch("What is Perplexity AI")}
-                  className="bg-white/5 border border-white/20 hover:bg-gradient-to-r hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 text-foreground transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm rounded-2xl px-6 py-3"
+                  className="bg-white/5 border border-white/20 hover:bg-gradient-to-r hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 text-foreground transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm rounded-2xl px-3 py-2 md:px-6 md:py-3 text-xs md:text-sm"
                 >
                   What is Perplexity AI
                 </Button>
                 <Button 
                   variant="outline"
+                  size={isMobile ? "sm" : "default"}
                   onClick={() => handleSearch("How to learn programming")}
-                  className="bg-white/5 border border-white/20 hover:bg-gradient-to-r hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 text-foreground transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm rounded-2xl px-6 py-3"
+                  className="bg-white/5 border border-white/20 hover:bg-gradient-to-r hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 text-foreground transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm rounded-2xl px-3 py-2 md:px-6 md:py-3 text-xs md:text-sm"
                 >
                   How to learn programming
                 </Button>
                 <Button 
                   variant="outline"
+                  size={isMobile ? "sm" : "default"}
                   onClick={() => handleSearch("What is React")}
-                  className="bg-white/5 border border-white/20 hover:bg-gradient-to-r hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 text-foreground transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm rounded-2xl px-6 py-3"
+                  className="bg-white/5 border border-white/20 hover:bg-gradient-to-r hover:from-[#9b87f5]/20 hover:to-[#7E69AB]/20 hover:border-[#9b87f5]/50 text-foreground transition-all duration-300 hover:scale-105 hover:shadow-lg backdrop-blur-sm rounded-2xl px-3 py-2 md:px-6 md:py-3 text-xs md:text-sm"
                 >
                   What is React
                 </Button>
@@ -357,14 +361,14 @@ const Index = () => {
             </div>
           ) : (
             <div className="max-w-4xl mx-auto w-full">
-              <div className="mb-6">
+              <div className="mb-4 md:mb-6">
                 <SearchTypeToggle 
                   activeType={searchType} 
                   onChange={handleSearchTypeChange} 
                 />
               </div>
               
-              <div className="mb-6">
+              <div className="mb-4 md:mb-6">
                 <CustomSearchModelSelector
                   selectedModel={searchModel}
                   selectedDomain={searchDomain}
@@ -374,16 +378,16 @@ const Index = () => {
               </div>
               
               {isSearching ? (
-                <div className="animate-pulse space-y-6 p-6 bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10">
-                  <div className="h-10 bg-gradient-to-r from-[#9b87f5]/20 to-[#7E69AB]/20 rounded-2xl w-3/4"></div>
-                  <div className="space-y-3">
-                    <div className="h-4 bg-white/10 rounded-xl"></div>
-                    <div className="h-4 bg-white/10 rounded-xl"></div>
-                    <div className="h-4 bg-white/10 rounded-xl w-5/6"></div>
+                <div className="animate-pulse space-y-4 md:space-y-6 p-4 md:p-6 bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10">
+                  <div className="h-8 md:h-10 bg-gradient-to-r from-[#9b87f5]/20 to-[#7E69AB]/20 rounded-2xl w-3/4"></div>
+                  <div className="space-y-2 md:space-y-3">
+                    <div className="h-3 md:h-4 bg-white/10 rounded-xl"></div>
+                    <div className="h-3 md:h-4 bg-white/10 rounded-xl"></div>
+                    <div className="h-3 md:h-4 bg-white/10 rounded-xl w-5/6"></div>
                   </div>
-                  <div className="space-y-3">
-                    <div className="h-4 bg-white/10 rounded-xl"></div>
-                    <div className="h-4 bg-white/10 rounded-xl w-4/6"></div>
+                  <div className="space-y-2 md:space-y-3">
+                    <div className="h-3 md:h-4 bg-white/10 rounded-xl"></div>
+                    <div className="h-3 md:h-4 bg-white/10 rounded-xl w-4/6"></div>
                   </div>
                 </div>
               ) : (
@@ -394,9 +398,9 @@ const Index = () => {
             </div>
           )}
           
-          {/* Enhanced Footer */}
-          <div className="mt-auto text-center py-8">
-            <div className="text-sm text-muted-foreground/70 mb-2">
+          {/* Enhanced Footer - Mobile Optimized */}
+          <div className="mt-auto text-center py-6 md:py-8">
+            <div className="text-xs md:text-sm text-muted-foreground/70 mb-2">
               Curious Search Buddy © {new Date().getFullYear()}
             </div>
             <div className="text-xs text-muted-foreground/50">
