@@ -42,10 +42,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     clearHistory();
     toast.success("Search history cleared");
   };
-
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
   
   return (
     <>
@@ -61,6 +57,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         className={cn(
           "fixed inset-y-0 left-0 z-50 w-72 border-r transition-all duration-500 ease-in-out",
           isOpen ? "translate-x-0" : "-translate-x-full",
+          isMobile ? "md:translate-x-0" : "",
           "dark:bg-gradient-to-b dark:from-[#1a1625] dark:via-[#211E2E] dark:to-[#2a2639] dark:border-white/10",
           "light:bg-gradient-to-b light:from-white light:via-gray-50 light:to-gray-100 light:border-black/10",
           "shadow-2xl backdrop-blur-xl"
@@ -73,17 +70,42 @@ const Sidebar: React.FC<SidebarProps> = ({
             <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-gradient-to-tr from-[#9b87f5]/5 to-[#7E69AB]/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
           </div>
 
+          {/* Enhanced Toggle button for mobile */}
+          {isMobile && (
+            <div className="absolute right-0 top-4 transform translate-x-full z-10">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsOpen(!isOpen)}
+                className={cn(
+                  "dark:bg-gradient-to-r dark:from-[#211E2E] dark:via-[#2A2639] dark:to-[#211E2E] dark:text-white dark:hover:from-[#2A2639] dark:hover:via-[#33304a] dark:hover:to-[#2A2639]",
+                  "light:bg-gradient-to-r light:from-white light:via-gray-50 light:to-white light:text-black light:hover:from-gray-50 light:hover:via-gray-100 light:hover:to-gray-50",
+                  "rounded-l-none h-12 w-10 flex items-center justify-center shadow-xl border border-l-0 dark:border-white/10 light:border-black/10",
+                  "transition-all duration-300 hover:scale-105 backdrop-blur-sm"
+                )}
+              >
+                {isOpen ? (
+                  <X className="h-5 w-5 transition-transform duration-300 hover:rotate-90" />
+                ) : (
+                  <Menu className="h-5 w-5 transition-transform duration-300 hover:scale-110" />
+                )}
+              </Button>
+            </div>
+          )}
+
           {/* Enhanced Desktop close button */}
-          <div className="absolute right-3 top-3 z-10">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleToggle}
-              className="h-9 w-9 p-0 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:rotate-90 backdrop-blur-sm"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
+          {!isMobile && (
+            <div className="absolute right-3 top-3 z-10">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsOpen(false)}
+                className="h-9 w-9 p-0 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:rotate-90 backdrop-blur-sm"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
           
           {/* Enhanced Header */}
           <div className="p-6 border-b dark:border-white/10 light:border-black/10 relative z-10">
@@ -231,25 +253,6 @@ const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
       </aside>
-
-      {/* Mobile Toggle Button - Only show when sidebar is closed */}
-      {!isOpen && isMobile && (
-        <div className="fixed left-4 top-4 z-50">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleToggle}
-            className={cn(
-              "dark:bg-gradient-to-r dark:from-[#211E2E] dark:via-[#2A2639] dark:to-[#211E2E] dark:text-white dark:hover:from-[#2A2639] dark:hover:via-[#33304a] dark:hover:to-[#2A2639]",
-              "light:bg-gradient-to-r light:from-white light:via-gray-50 light:to-white light:text-black light:hover:from-gray-50 light:hover:via-gray-100 light:hover:to-gray-50",
-              "h-12 w-12 rounded-xl shadow-xl border dark:border-white/10 light:border-black/10",
-              "transition-all duration-300 hover:scale-105 backdrop-blur-sm"
-            )}
-          >
-            <Menu className="h-5 w-5 transition-transform duration-300 hover:scale-110" />
-          </Button>
-        </div>
-      )}
     </>
   );
 };
