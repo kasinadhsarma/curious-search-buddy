@@ -89,16 +89,272 @@
 }
 
 @layer utilities {
+  /* Enhanced Animations */
   .animate-fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+  
+  .animate-gradient {
+    animation: gradient 8s ease infinite;
+    background-size: 300% 300%;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  /* Blue Theme Enhancements */
+  .blue-glow {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  
+  .blue-border-glow {
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+  }
+  
+  .bg-300% {
+    background-size: 300% 300%;
   }
   
   @keyframes fadeIn {
     from {
       opacity: 0;
+      transform: translateY(20px);
     }
     to {
       opacity: 1;
+      transform: translateY(0);
     }
   }
+  
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  @keyframes glow {
+    from {
+      text-shadow: 0 0 20px rgba(155, 135, 245, 0.5);
+    }
+    to {
+      text-shadow: 0 0 30px rgba(155, 135, 245, 0.8);
+    }
+  }
+}
+
+/* Search Input Styling */
+.perplexity-search-input {
+  transition: all 0.3s ease;
+}
+
+.dark .perplexity-search-input {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+:not(.dark) .perplexity-search-input {
+  background-color: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: black;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.perplexity-search-input:focus-within {
+  border-color: rgba(155, 135, 245, 0.5);
+  box-shadow: 0 0 0 3px rgba(155, 135, 245, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Enhanced Button Styling */
+.perplexity-button {
+  background: linear-gradient(135deg, rgb(155, 135, 245), rgb(126, 105, 171));
+  color: white;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-radius: 1rem;
+}
+
+.perplexity-button:hover {
+  background: linear-gradient(135deg, rgb(126, 105, 171), rgb(155, 135, 245));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(155, 135, 245, 0.4);
+}
+
+/* Enhanced Glassmorphism Elements */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 1.5rem;
+}
+
+/* Enhanced Scrollbar styling */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(155, 135, 245, 0.6), rgba(126, 105, 171, 0.6));
+  border-radius: 10px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(155, 135, 245, 0.8), rgba(126, 105, 171, 0.8));
+}
+
+:not(.dark) ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+:not(.dark) ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+:not(.dark) ::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(155, 135, 245, 0.6), rgba(126, 105, 171, 0.6));
+  border-radius: 10px;
+}
+
+:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(155, 135, 245, 0.8), rgba(126, 105, 171, 0.8));
+}
+
+/* Hide scrollbar for clean UI on modern browsers */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Enhanced Card Styling */
+.card-v2 {
+  border-radius: 24px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(20px);
+}
+
+.card-v2:hover {
+  box-shadow: 0 20px 40px rgba(155, 135, 245, 0.15);
+  transform: translateY(-4px);
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #9b87f5, #7E69AB);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 1rem;
+}
+
+.btn-gradient:hover {
+  background: linear-gradient(135deg, #8a76e4, #6d5a9a);
+  box-shadow: 0 8px 25px rgba(155, 135, 245, 0.4);
+  transform: translateY(-2px);
+}
+
+.input-v2 {
+  border-radius: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  backdrop-filter: blur(10px);
+}
+
+.input-v2:focus {
+  box-shadow: 0 0 0 3px rgba(155, 135, 245, 0.2);
+  border-color: rgba(155, 135, 245, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Enhanced Toggle Switch */
+.modern-toggle {
+  width: 52px;
+  height: 26px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  border-radius: 13px;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.modern-toggle.active {
+  background: linear-gradient(135deg, #9b87f5, #7E69AB);
+  box-shadow: 0 4px 15px rgba(155, 135, 245, 0.4);
+}
+
+.modern-toggle .toggle-thumb {
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modern-toggle.active .toggle-thumb {
+  left: 28px;
+  box-shadow: 0 4px 12px rgba(155, 135, 245, 0.3);
+}
+
+/* Enhanced Progress Bar */
+.progress-bar {
+  height: 6px;
+  background: linear-gradient(90deg, #9b87f5, #7E69AB);
+  border-radius: 3px;
+  box-shadow: 0 2px 10px rgba(155, 135, 245, 0.3);
+}
+
+/* Enhanced Hero Gradient */
+.hero-gradient {
+  background: radial-gradient(circle at top right, rgba(155, 135, 245, 0.3) 0%, transparent 70%),
+              radial-gradient(circle at bottom left, rgba(126, 105, 171, 0.3) 0%, transparent 70%),
+              radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+}
+
+/* Blue accent elements */
+.blue-accent {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 197, 253, 0.1));
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.blue-hover:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 197, 253, 0.2));
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
 }
